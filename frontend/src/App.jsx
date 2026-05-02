@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home.jsx";                     
+import Signup from "./Signup.jsx";
 import Dashboard from "./components/Dashboard";  
 import Assistant from "./components/Assistant";
 import UserContext from "./context/UserContext";
 import Recommendation from "./components/Recommendation";
+import Payment from "./components/Payment";
 import Success from "./components/Success";
 
 const App = () => {
@@ -14,9 +16,11 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/login" element={<Home/>} />
+          <Route path="/signup" element={<Signup/>} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/recommendation" element={<Recommendation />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="/success" element={<Success />} />
         </Routes>
       </UserContext>

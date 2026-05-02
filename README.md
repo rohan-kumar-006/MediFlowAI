@@ -10,6 +10,11 @@ MediFlow AI is a healthcare assistant that combines a React frontend, a FastAPI 
 
 This repository is the single source of truth for the project and contains the application code, database scripts, API contract, architecture, and project documentation required for submission.
 
+## 🎥 Demo Video
+
+🚀 **Project Walkthrough:**  
+👉 [Click to Watch MediFlow AI Demo](https://drive.google.com/file/d/1hyNWUibZM96v2cwYm2Gg9KA8fgtlCkUk/view?usp=sharing)
+
 ## Problem Statement
 
 Patients often struggle to decide which specialist to consult, especially when symptoms are vague or described in everyday language. Traditional appointment flows also separate symptom capture, doctor discovery, and booking into multiple disconnected steps.

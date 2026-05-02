@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
 
 import "./Recommendation.css";
 
@@ -9,73 +10,61 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 export default function Recommendation() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { recommended_specialists = [], doctors = [] } = location.state || {};
+  const [payload, setPayload] = useState(location.state || null);
+
+  const hasUsefulResults = (value) => {
+    if (!value) return false;
+    return (value.recommended_specialists?.length || 0) > 0 || (value.doctors?.length || 0) > 0;
+  };
+
+  useEffect(() => {
+    if (hasUsefulResults(payload)) return;
+
+    const stored = localStorage.getItem("last_recommendation");
+    if (!stored) return;
+
+    try {
+      const parsed = JSON.parse(stored);
+      if (hasUsefulResults(parsed)) {
+        setPayload(parsed);
+      }
+    } catch {
+      localStorage.removeItem("last_recommendation");
+    }
+  }, [payload]);
+
+  const { recommended_specialists = [], doctors = [] } = payload || {};
+
+  // Deduplicate doctors by doctor_id
+  const uniqueDoctors = useMemo(() => {
+    const seen = new Map();
+    const unique = [];
+    
+    doctors.forEach((doctor) => {
+      // Only keep the first occurrence of each doctor
+      if (!seen.has(doctor.doctor_id)) {
+        seen.set(doctor.doctor_id, true);
+        unique.push(doctor);
+      }
+    });
+    
+    return unique;
+  }, [doctors]);
 
   const handlePayment = (doctor) => {
-    if (!window.Razorpay) {
-      alert("Payment service is not loaded. Please add the Razorpay checkout script.");
-      return;
-    }
-
-    const options = {
-      key: "Your Key here",
-      amount: doctor.fees * 100,
-      currency: "INR",
-      name: "Healthcare Assistant",
-      description: `Consultation with Dr. ${doctor.name}`,
-      handler: async function () {
-        try {
-          const userId = localStorage.getItem("user_id");
-          const patientId = localStorage.getItem("patient_id") || userId;
-
-          const response = await fetch(`${BACKEND_URL}/appointments`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              patient_id: parseInt(patientId, 10),
-              doctor_id: doctor.doctor_id,
-              slot_id: doctor.slot_id,
-              reason: "Booked via AI Assistant",
-            }),
-          });
-
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data?.detail || "Appointment creation failed");
-          }
-
-          const patientDetails = await fetch(`${BACKEND_URL}/patient-details/${userId}`);
-          const patientData = await patientDetails.json();
-          if (!patientDetails.ok) {
-            throw new Error(patientData?.detail || "Patient lookup failed");
-          }
-
-          const payload = {
-            patientName: patientData.name,
-            doctor: doctor.name,
-            hospital: doctor.hospital,
-            bookingId: `BOOK-${data.appointment_id}`,
-            date: doctor.next_available_date,
-            time: doctor.start_time,
-          };
-          navigate(`/success?data=${encodeURIComponent(JSON.stringify(payload))}`);
-        } catch (err) {
-          console.error("Appointment creation failed:", err);
-          alert(err.message || "Appointment creation failed");
-        }
+    // Navigate to fake payment page with doctor details
+    navigate("/payment", {
+      state: {
+        doctor_id: doctor.doctor_id,
+        doctor_name: doctor.name,
+        specialization: doctor.specialization,
+        hospital: doctor.hospital,
+        slot_id: doctor.slot_id,
+        fees: doctor.fees,
+        next_available_date: doctor.next_available_date,
+        start_time: doctor.start_time,
       },
-      prefill: {
-        name: "Patient",
-        email: "",
-        contact: "",
-      },
-      theme: {
-        color: "#0d6efd",
-      },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+    });
   };
 
   function formatDateTime(dateString, timeString) {
@@ -116,9 +105,9 @@ export default function Recommendation() {
         <p className="warning-text">No specialist recommendations available.</p>
       )}
 
-      {doctors.length > 0 ? (
+      {uniqueDoctors.length > 0 ? (
         <div className="doctor-card-container">
-          {doctors.map((doctor) => (
+          {uniqueDoctors.map((doctor) => (
             <div className="doctor-card" key={`${doctor.doctor_id}-${doctor.slot_id}`}>
               <div className="doctor-info">
                 <p className="doctor-name">{doctor.name}</p>

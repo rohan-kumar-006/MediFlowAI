@@ -81,10 +81,18 @@ def fetch_doctor_details(specialists: list[str]) -> list[dict]:
         rows = call_stored_procedure(conn, "sp_get_doctors_by_specialists", [",".join(specialists)])
 
     doctors: list[dict] = []
+    seen_doctor_ids = set()
+    
     for row in rows:
+        doctor_id = int(row[0])
+        # Skip if we've already added this doctor (avoid duplicates)
+        if doctor_id in seen_doctor_ids:
+            continue
+        seen_doctor_ids.add(doctor_id)
+        
         doctors.append(
             {
-                "doctor_id": int(row[0]),
+                "doctor_id": doctor_id,
                 "name": str(row[1]),
                 "specialization": str(row[2]),
                 "rating": float(row[3] or 0),

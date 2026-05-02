@@ -86,6 +86,16 @@ class AppointmentResponse(BaseModel):
     appointment_id: int
 
 
+class EmergencyCheckRequest(BaseModel):
+    text: str = Field(min_length=1)
+
+
+class EmergencyCheckResponse(BaseModel):
+    is_emergency: bool
+    confidence: int
+    keywords_detected: list[str]
+
+
 class GeminiRequest(BaseModel):
     prompt: str = Field(min_length=1)
     history: list[str] | str | None = None

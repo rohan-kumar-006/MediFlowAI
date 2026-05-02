@@ -10,6 +10,8 @@ function UserContext({ children }) {
   const recognitionRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [status, setStatus] = useState("Idle");
+  const [isEmergency, setIsEmergency] = useState(false);
+  const [emergencyKeywords, setEmergencyKeywords] = useState([]);
   const navigate = useNavigate();
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
@@ -45,15 +47,47 @@ function UserContext({ children }) {
     window.speechSynthesis.speak(utterance);
   }, []);
 
+  const checkEmergency = useCallback(async (userText) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/check-emergency`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: userText }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.is_emergency) {
+        setIsEmergency(true);
+        setEmergencyKeywords(data.keywords_detected);
+        // Don't process further if it's an emergency
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Emergency check failed:", error);
+      return false;
+    }
+  }, [BACKEND_URL]);
+
   const aiResponse = useCallback(async (prompt) => {
     setMessages((prev) => [...prev, { sender: "Patient", text: prompt }]);
+
+    // Check for emergency first
+    const isEmergencyCase = await checkEmergency(prompt);
+    
+    if (isEmergencyCase) {
+      const emergencyResponse = "EMERGENCY DETECTED: Please call emergency services immediately! Hang up and call 911 or your local emergency number.";
+      setMessages((prev) => [...prev, { sender: "Assistant", text: emergencyResponse }]);
+      speak(emergencyResponse);
+      return;
+    }
 
     const text = await run(prompt);
     const cleanedText = text.replace(/^Agent:\s*/i, "").trim();
 
     setMessages((prev) => [...prev, { sender: "Assistant", text: cleanedText }]);
     speak(cleanedText);
-  }, [speak]);
+  }, [checkEmergency, speak]);
 
   useEffect(() => {
     const SpeechRecognition = window?.SpeechRecognition || window?.webkitSpeechRecognition;
@@ -144,6 +178,16 @@ function UserContext({ children }) {
       .filter(Boolean);
 
     if (symptomPhrases.length === 0) {
+      localStorage.setItem(
+        "last_recommendation",
+        JSON.stringify({
+          phrases: [],
+          normalized_symptoms: [],
+          specialists: [],
+          recommended_specialists: [],
+          doctors: [],
+        })
+      );
       navigate("/recommendation", {
         state: {
           phrases: [],
@@ -168,9 +212,20 @@ function UserContext({ children }) {
         throw new Error(data?.detail || "Failed to get recommendations");
       }
 
+      localStorage.setItem("last_recommendation", JSON.stringify(data));
       navigate("/recommendation", { state: data });
     } catch (error) {
       console.error("Error during LangGraph execution:", error);
+      localStorage.setItem(
+        "last_recommendation",
+        JSON.stringify({
+          phrases: symptomPhrases,
+          normalized_symptoms: [],
+          specialists: [],
+          recommended_specialists: [],
+          doctors: [],
+        })
+      );
       navigate("/recommendation", {
         state: {
           phrases: symptomPhrases,
@@ -184,7 +239,15 @@ function UserContext({ children }) {
   }
 
   return (
-    <datacontext.Provider value={{ connect, disconnect, messages, status }}>
+    <datacontext.Provider value={{ 
+      connect, 
+      disconnect, 
+      messages, 
+      status,
+      isEmergency,
+      emergencyKeywords,
+      setIsEmergency,
+    }}>
       {children}
     </datacontext.Provider>
   );

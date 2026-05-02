@@ -13,6 +13,7 @@ router = APIRouter(tags=["patients"])
 @router.get("/patient-details/{user_id}", response_model=PatientDetailsResponse)
 def get_patient_details(user_id: int) -> PatientDetailsResponse:
     try:
+        # print(user_id)
         with db_session() as conn:
             rows = call_stored_procedure(conn, "sp_get_patient_details", [user_id])
     except DatabaseError as exc:
@@ -22,7 +23,7 @@ def get_patient_details(user_id: int) -> PatientDetailsResponse:
     row = rows[0] if rows else None
     if not row:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Patient not found")
-
+    
     return PatientDetailsResponse(
         name=row[0],
         date_of_birth=row[1],
@@ -40,6 +41,7 @@ def get_medical_history(user_id: int) -> MedicalHistoryResponse:
     try:
         with db_session() as conn:
             patient_rows = call_stored_procedure(conn, "sp_get_patient_id", [user_id])
+            # print(patient_rows)
             patient_row = patient_rows[0] if patient_rows else None
             if not patient_row:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Patient not found")

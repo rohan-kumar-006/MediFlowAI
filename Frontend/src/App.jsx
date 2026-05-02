@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import Assistant from "./components/Assistant";
 import UserContext from "./context/UserContext";
 import Recommendation from "./components/Recommendation";
+import Payment from "./components/Payment";
 import Success from "./components/Success";
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/recommendation" element={<Recommendation />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="/success" element={<Success />} />
         </Routes>
       </UserContext>

@@ -13,6 +13,7 @@ router = APIRouter(tags=["appointments"])
 @router.post("/appointments", response_model=AppointmentResponse)
 def create_appointment(request: AppointmentRequest) -> AppointmentResponse:
     try:
+        logger.info(f"Creating appointment with patient_id={request.patient_id}, doctor_id={request.doctor_id}, slot_id={request.slot_id}")
         with db_session() as conn:
             rows = call_stored_procedure(
                 conn,
@@ -22,11 +23,13 @@ def create_appointment(request: AppointmentRequest) -> AppointmentResponse:
             appointment_id = rows[0][0] if rows else None
             if appointment_id is None:
                 conn.rollback()
+                logger.error("Appointment creation returned None")
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail="Failed to create appointment",
                 )
             conn.commit()
+            logger.info(f"Appointment created successfully with ID: {appointment_id}")
     except HTTPException:
         raise
     except DatabaseError as exc:

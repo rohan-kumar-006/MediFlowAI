@@ -14,6 +14,24 @@ class LoginResponse(BaseModel):
     user_id: int
 
 
+class SignupRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=6)
+    name: str = Field(min_length=1)
+    date_of_birth: date
+    gender: str
+    contact_number: str
+    medical_record_number: str
+    blood_group: Optional[str] = None
+    marital_status: Optional[str] = None
+
+
+class SignupResponse(BaseModel):
+    message: str
+    user_id: int
+    patient_id: int
+
+
 class PatientDetailsResponse(BaseModel):
     name: str
     date_of_birth: date | str | None = None

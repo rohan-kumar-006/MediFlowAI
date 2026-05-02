@@ -53,15 +53,3 @@ Thumbs.db
 *.log
 .cache/
 coverage/
-# Python
-venv/
-__pycache__/
-*.pyc
-.env
-
-# Node
-node_modules/
-dist/
-
-# Misc
-.DS_Store

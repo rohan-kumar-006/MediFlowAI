@@ -144,16 +144,6 @@ function UserContext({ children }) {
       .filter(Boolean);
 
     if (symptomPhrases.length === 0) {
-      localStorage.setItem(
-        "last_recommendation",
-        JSON.stringify({
-          phrases: [],
-          normalized_symptoms: [],
-          specialists: [],
-          recommended_specialists: [],
-          doctors: [],
-        })
-      );
       navigate("/recommendation", {
         state: {
           phrases: [],
@@ -178,20 +168,9 @@ function UserContext({ children }) {
         throw new Error(data?.detail || "Failed to get recommendations");
       }
 
-      localStorage.setItem("last_recommendation", JSON.stringify(data));
       navigate("/recommendation", { state: data });
     } catch (error) {
       console.error("Error during LangGraph execution:", error);
-      localStorage.setItem(
-        "last_recommendation",
-        JSON.stringify({
-          phrases: symptomPhrases,
-          normalized_symptoms: [],
-          specialists: [],
-          recommended_specialists: [],
-          doctors: [],
-        })
-      );
       navigate("/recommendation", {
         state: {
           phrases: symptomPhrases,

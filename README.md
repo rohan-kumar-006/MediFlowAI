@@ -12,8 +12,10 @@ This repository is the single source of truth for the project and contains the a
 
 ## 🎥 Demo Video
 
-🚀 **Project Walkthrough:**  
-👉 [Click to Watch MediFlow AI Demo](https://drive.google.com/file/d/1hyNWUibZM96v2cwYm2Gg9KA8fgtlCkUk/view?usp=sharing)
+## Demo Video
+
+Watch the demo here:  
+👉 [MediFlow AI Demo Video](https://drive.google.com/file/d/1hyNWUibZM96v2cwYm2Gg9KA8fgtlCkUk/view?usp=sharing)
 
 ## Problem Statement
 

@@ -3,7 +3,7 @@ import { datacontext } from "../context/dataContext";
 import va from "../assets/assistant.jpg";
 
 const Assistant = () => {
-  const { connect, disconnect, messages, status } = useContext(datacontext);
+  const { connect, disconnect, messages, status, errorMessage } = useContext(datacontext);
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-[#0f2027] via-[#203a43] to-[#2c5364] text-white">
@@ -27,7 +27,7 @@ const Assistant = () => {
               />
 
               {/* Pulse animation when connected */}
-              {status === "connected" && (
+              {status === "Listening" && (
                 <span className="absolute inset-0 rounded-full border-4 border-cyan-400 animate-ping opacity-40"></span>
               )}
             </div>
@@ -36,6 +36,11 @@ const Assistant = () => {
             <p className="text-sm text-gray-300">
               Status: <span className="text-cyan-400 font-semibold">{status}</span>
             </p>
+            {errorMessage && (
+              <p className="text-center text-xs text-rose-300 max-w-xs">
+                {errorMessage}
+              </p>
+            )}
           </div>
         </div>
 

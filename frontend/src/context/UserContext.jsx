@@ -10,6 +10,7 @@ function UserContext({ children }) {
   const recognitionRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [status, setStatus] = useState("Idle");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
@@ -68,6 +69,7 @@ function UserContext({ children }) {
     recognition.lang = "en-US";
 
     recognition.onstart = () => {
+      setErrorMessage("");
       setStatus("Listening");
     };
 
@@ -91,7 +93,15 @@ function UserContext({ children }) {
 
     recognition.onerror = (event) => {
       console.error("Recognition error:", event.error);
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        isListening.current = false;
+        setStatus("Microphone blocked");
+        setErrorMessage("Microphone access is blocked. Allow mic permission in the browser and try again.");
+        return;
+      }
+
       setStatus("Idle");
+      setErrorMessage(`Speech recognition failed: ${event.error}`);
     };
 
     recognitionRef.current = recognition;
@@ -115,10 +125,13 @@ function UserContext({ children }) {
   function connect() {
     if (!recognitionRef.current) {
       console.warn("Cannot start microphone: SpeechRecognition unavailable.");
+      setStatus("Unavailable");
+      setErrorMessage("This browser does not support speech recognition.");
       return;
     }
 
     isListening.current = true;
+    setErrorMessage("");
     try {
       recognitionRef.current.start();
       setStatus("Listening");
@@ -205,7 +218,7 @@ function UserContext({ children }) {
   }
 
   return (
-    <datacontext.Provider value={{ connect, disconnect, messages, status }}>
+    <datacontext.Provider value={{ connect, disconnect, messages, status, errorMessage }}>
       {children}
     </datacontext.Provider>
   );

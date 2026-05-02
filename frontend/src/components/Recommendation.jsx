@@ -31,7 +31,7 @@ export default function Recommendation() {
 
   const { recommended_specialists = [], doctors = [] } = payload || {};
 
-  const handlePayment = (doctor) => {
+  const handleBookAppointment = (doctor) => {
     navigate("/payment", { state: { doctor } });
   };
 

@@ -31,8 +31,16 @@ export default function Recommendation() {
 
   const { recommended_specialists = [], doctors = [] } = payload || {};
 
+  // ✅ FIXED FUNCTION
   const handleBookAppointment = (doctor) => {
-    navigate("/payment", { state: { doctor } });
+    const userName = localStorage.getItem("user_name") || "User";
+
+    navigate("/payment", {
+      state: {
+        doctor,
+        userName
+      }
+    });
   };
 
   function formatDateTime(dateString, timeString) {
@@ -80,7 +88,10 @@ export default function Recommendation() {
       {doctors.length > 0 ? (
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {doctors.map((doctor) => (
-            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-6 flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300 shadow-2xl" key={`${doctor.doctor_id}-${doctor.slot_id}`}>
+            <div
+              className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-6 flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300 shadow-2xl"
+              key={`${doctor.doctor_id}-${doctor.slot_id}`}
+            >
               <div className="space-y-3">
                 <p className="text-2xl font-bold text-cyan-400">{doctor.name}</p>
                 <div className="space-y-1 text-slate-300 text-sm">
@@ -91,10 +102,11 @@ export default function Recommendation() {
                   <p><strong className="text-white">Next Slot:</strong> {formatDateTime(doctor.next_available_date, doctor.start_time)}</p>
                 </div>
               </div>
+
               <div className="mt-6">
-                <button 
-                  className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] transition-all active:scale-95" 
-                    onClick={() => handleBookAppointment(doctor)}
+                <button
+                  className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] transition-all active:scale-95"
+                  onClick={() => handleBookAppointment(doctor)}
                 >
                   Book Appointment
                 </button>

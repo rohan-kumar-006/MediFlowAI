@@ -1,39 +1,12 @@
-# ------------------------------
-# ENV (ALL LOCATIONS)
-# ------------------------------
-.env
-.env.*
-backend/.env
-frontend/.env
-
-# ------------------------------
 # Python
-# ------------------------------
+venv/
 __pycache__/
 *.pyc
-venv/
-.venv/
-backend/venv/
+.env
 
-# ------------------------------
-# React / Node
-# ------------------------------
+# Node
 node_modules/
-frontend/node_modules/
 dist/
-frontend/dist/
 
-# ------------------------------
-# OS / Editor
-# ------------------------------
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-
-# ------------------------------
 # Misc
-# ------------------------------
-*.log
-.cache/
-coverage/git rm Backend/.gitignore
+.DS_Store

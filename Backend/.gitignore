@@ -1,0 +1,55 @@
+# ------------------------------
+
+# ENV (ALL LOCATIONS)
+
+# ------------------------------
+
+.env
+.env.*
+backend/.env
+frontend/.env
+
+# ------------------------------
+
+# Python
+
+# ------------------------------
+
+**pycache**/
+*.pyc
+venv/
+.venv/
+backend/venv/
+
+# ------------------------------
+
+# React / Node
+
+# ------------------------------
+
+node_modules/
+frontend/node_modules/
+
+dist/
+frontend/dist/
+
+# ------------------------------
+
+# OS / Editor
+
+# ------------------------------
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ------------------------------
+
+# Misc
+
+# ------------------------------
+
+*.log
+.cache/
+coverage/

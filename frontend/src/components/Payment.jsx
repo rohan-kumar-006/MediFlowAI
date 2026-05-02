@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom"
-import { useLocation, useEffect, useState } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
+import { useEffect, useState } from "react"
 import "./Payment.css"
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000"

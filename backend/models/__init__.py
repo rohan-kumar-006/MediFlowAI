@@ -14,6 +14,8 @@ from .schemas import (
     NormalizeRequest,
     NormalizeResponse,
     PatientDetailsResponse,
+    SignupRequest,
+    SignupResponse,
 )
 
 __all__ = [
@@ -32,4 +34,6 @@ __all__ = [
     "NormalizeRequest",
     "NormalizeResponse",
     "PatientDetailsResponse",
+    "SignupRequest",
+    "SignupResponse",
 ]

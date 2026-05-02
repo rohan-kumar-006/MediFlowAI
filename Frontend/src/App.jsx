@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home.jsx";                     
+import Signup from "./Signup.jsx";
 import Dashboard from "./components/Dashboard";  
 import Assistant from "./components/Assistant";
 import UserContext from "./context/UserContext";
@@ -15,6 +16,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/login" element={<Home/>} />
+          <Route path="/signup" element={<Signup/>} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/recommendation" element={<Recommendation />} />

@@ -1,3 +1,3 @@
-"""Root entrypoint for `uvicorn main:app --reload`."""
+"""Compatibility shim exposing backend.main.app."""
 
 from backend.main import app

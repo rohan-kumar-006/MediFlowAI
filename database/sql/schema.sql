@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS hospitals (
     website TEXT
 );
 
-INSERT INTO hospitals (name, address, contact_number, website)
+INSERT IGNORE INTO hospitals (name, address, contact_number, website)
 VALUES
 ('City Hospital', 'Delhi', '8888888888', 'www.cityhospital.com'),
 ('Metro Hospital', 'Mumbai', '7777777777', 'www.metrohospital.com');
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS doctors (
     FOREIGN KEY (hospital_id) REFERENCES hospitals(id) ON DELETE SET NULL
 );
 
-INSERT INTO doctors (name, specialization, experience, rating, fees, hospital_id)
+INSERT IGNORE INTO doctors (name, specialization, experience, rating, fees, hospital_id)
 VALUES
 ('Dr Amit', 'Cardiologist', 10, 4.5, 500, 1),
 ('Dr Neha', 'Dermatologist', 8, 4.2, 400, 2),
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS availability_slots (
     FOREIGN KEY (doctor_id) REFERENCES doctors(id)
 );
 
-INSERT INTO availability_slots (doctor_id, available_date, start_time, end_time)
+INSERT IGNORE INTO availability_slots (doctor_id, available_date, start_time, end_time)
 VALUES
 (1, '2026-05-10', '10:00:00', '12:00:00'),
 (2, '2026-05-10', '12:00:00', '14:00:00'),
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO reviews (doctor_id, patient_id, rating, comment)
+INSERT IGNORE INTO reviews (doctor_id, patient_id, rating, comment)
 VALUES
 (1, 2, 4.5, 'Good'),
 (2, 3, 4.0, 'Nice'),
@@ -145,10 +145,17 @@ CREATE TABLE IF NOT EXISTS appointments (
     doctor_id INT,
     slot_id INT,
     appointment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    reason VARCHAR(255)
+    reason VARCHAR(255),
+    UNIQUE KEY uq_appointments_slot_id (slot_id)
 );
 
-INSERT INTO appointments (patient_id, doctor_id, slot_id, reason)
+DELETE a1
+FROM appointments a1
+JOIN appointments a2
+  ON a1.slot_id = a2.slot_id
+ AND a1.id > a2.id;
+
+INSERT IGNORE INTO appointments (patient_id, doctor_id, slot_id, reason)
 VALUES
 (2, 1, 1, 'Heart check'),
 (3, 2, 2, 'Skin issue'),
@@ -164,7 +171,7 @@ CREATE TABLE IF NOT EXISTS visits (
     notes TEXT
 );
 
-INSERT INTO visits (patient_id, doctor_id, visit_date, department, notes)
+INSERT IGNORE INTO visits (patient_id, doctor_id, visit_date, department, notes)
 VALUES
 (2, 1, '2026-05-01', 'Cardiology', 'Routine'),
 (3, 2, '2026-05-02', 'Dermatology', 'Rash'),
@@ -176,7 +183,7 @@ CREATE TABLE IF NOT EXISTS specialists (
     name VARCHAR(100)
 );
 
-INSERT INTO specialists (name)
+INSERT IGNORE INTO specialists (name)
 VALUES ('Cardiologist'), ('Dermatologist'), ('Physician');
 
 -- SYMPTOMS
@@ -185,7 +192,7 @@ CREATE TABLE IF NOT EXISTS symptoms (
     name VARCHAR(255)
 );
 
-INSERT INTO symptoms (name)
+INSERT IGNORE INTO symptoms (name)
 VALUES ('Chest Pain'), ('Skin Allergy'), ('Fever');
 
 -- MAPPING
@@ -195,5 +202,5 @@ CREATE TABLE IF NOT EXISTS specialist_symptom (
     PRIMARY KEY (specialist_id, symptom_id)
 );
 
-INSERT INTO specialist_symptom VALUES
+INSERT IGNORE INTO specialist_symptom VALUES
 (1,1),(2,2),(3,3);

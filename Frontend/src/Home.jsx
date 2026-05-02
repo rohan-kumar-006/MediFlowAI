@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000"
 
 export default function Home() {
   const [email, setEmail] = useState("")
@@ -109,6 +109,17 @@ export default function Home() {
               {errorMessage}
             </p>
           )}
+
+          <p className="mt-6 text-sm text-slate-300">
+            Don't have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/signup")}
+              className="font-semibold text-cyan-300 hover:text-emerald-300"
+            >
+              Sign up here
+            </button>
+          </p>
         </div>
 
         {/* RIGHT PANEL */}

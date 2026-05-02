@@ -32,70 +32,7 @@ export default function Recommendation() {
   const { recommended_specialists = [], doctors = [] } = payload || {};
 
   const handlePayment = (doctor) => {
-    if (!window.Razorpay) {
-      alert("Payment service is not loaded. Please add the Razorpay checkout script.");
-      return;
-    }
-
-    const options = {
-      key: "Your Key here",
-      amount: doctor.fees * 100,
-      currency: "INR",
-      name: "Healthcare Assistant",
-      description: `Consultation with Dr. ${doctor.name}`,
-      handler: async function () {
-        try {
-          const userId = localStorage.getItem("user_id");
-          const patientId = localStorage.getItem("patient_id") || userId;
-
-          const response = await fetch(`${BACKEND_URL}/appointments`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              patient_id: parseInt(patientId, 10),
-              doctor_id: doctor.doctor_id,
-              slot_id: doctor.slot_id,
-              reason: "Booked via AI Assistant",
-            }),
-          });
-
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data?.detail || "Appointment creation failed");
-          }
-
-          const patientDetails = await fetch(`${BACKEND_URL}/patient-details/${userId}`);
-          const patientData = await patientDetails.json();
-          if (!patientDetails.ok) {
-            throw new Error(patientData?.detail || "Patient lookup failed");
-          }
-
-          const payload = {
-            patientName: patientData.name,
-            doctor: doctor.name,
-            hospital: doctor.hospital,
-            bookingId: `BOOK-${data.appointment_id}`,
-            date: doctor.next_available_date,
-            time: doctor.start_time,
-          };
-          navigate(`/success?data=${encodeURIComponent(JSON.stringify(payload))}`);
-        } catch (err) {
-          console.error("Appointment creation failed:", err);
-          alert(err.message || "Appointment creation failed");
-        }
-      },
-      prefill: {
-        name: "Patient",
-        email: "",
-        contact: "",
-      },
-      theme: {
-        color: "#0d6efd",
-      },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+    navigate("/payment", { state: { doctor } });
   };
 
   function formatDateTime(dateString, timeString) {
@@ -157,7 +94,7 @@ export default function Recommendation() {
               <div className="mt-6">
                 <button 
                   className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] transition-all active:scale-95" 
-                  onClick={() => handlePayment(doctor)}
+                    onClick={() => handleBookAppointment(doctor)}
                 >
                   Book Appointment
                 </button>

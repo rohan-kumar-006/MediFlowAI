@@ -30,7 +30,6 @@ export default function Signup() {
     e.preventDefault()
     setErrorMessage("")
 
-    // Validation
     if (!formData.email || !formData.password || !formData.name) {
       setErrorMessage("Email, password, and name are required")
       return
@@ -87,101 +86,101 @@ export default function Signup() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-[#020617] via-[#0f172a] to-[#020617] px-4">
-      {/* Animated Glow Background */}
-      <div className="absolute w-100 h-100 bg-cyan-500/20 rounded-full blur-3xl -top-25 -left-25 animate-pulse" />
-      <div className="absolute w-100 h-100 bg-emerald-500/20 rounded-full blur-3xl -bottom-30 -right-25 animate-pulse" />
+    <div className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#020617] px-4 py-10">
+
+      {/* Background Glow */}
+      <div className="absolute w-[400px] h-[400px] bg-cyan-500/20 rounded-full blur-3xl -top-20 -left-20 animate-pulse" />
+      <div className="absolute w-[400px] h-[400px] bg-emerald-500/20 rounded-full blur-3xl -bottom-20 -right-20 animate-pulse" />
 
       {/* Main Card */}
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-5xl">
         <div className="bg-gradient-to-b from-slate-900/80 to-slate-950/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-700/50 p-8">
-          <h1 className="text-3xl font-bold text-white mb-2 text-center">Create Account</h1>
-          <p className="text-slate-400 text-center mb-6">Sign up to access healthcare services</p>
+
+          <h1 className="text-3xl font-bold text-white mb-2 text-center">
+            Create Account
+          </h1>
+          <p className="text-slate-400 text-center mb-6">
+            Sign up to access healthcare services
+          </p>
 
           {errorMessage && (
-            <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm">
+            <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm md:col-span-2">
               {errorMessage}
             </div>
           )}
 
-          <form onSubmit={handleSignup} className="space-y-4">
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
+          {/* GRID FORM */}
+          <form onSubmit={handleSignup} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {/* Email - Full Width */}
+            <div className="md:col-span-2">
+              <label className="block text-sm text-slate-300 mb-1">Email</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                required
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
+              <label className="block text-sm text-slate-300 mb-1">Password</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Min 6 characters"
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                required
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               />
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Confirm Password</label>
+              <label className="block text-sm text-slate-300 mb-1">Confirm Password</label>
               <input
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Confirm password"
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                required
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               />
             </div>
 
-            {/* Name */}
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+            {/* Name - Full Width */}
+            <div className="md:col-span-2">
+              <label className="block text-sm text-slate-300 mb-1">Full Name</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="John Doe"
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                required
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               />
             </div>
 
-            {/* Date of Birth */}
+            {/* DOB */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Date of Birth</label>
+              <label className="block text-sm text-slate-300 mb-1">Date of Birth</label>
               <input
                 type="date"
                 name="date_of_birth"
                 value={formData.date_of_birth}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                required
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               />
             </div>
 
             {/* Gender */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Gender</label>
+              <label className="block text-sm text-slate-300 mb-1">Gender</label>
               <select
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -189,88 +188,78 @@ export default function Signup() {
               </select>
             </div>
 
-            {/* Contact Number */}
+            {/* Contact */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Contact Number</label>
+              <label className="block text-sm text-slate-300 mb-1">Contact Number</label>
               <input
                 type="tel"
                 name="contact_number"
                 value={formData.contact_number}
                 onChange={handleChange}
-                placeholder="9876543210"
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                required
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               />
             </div>
 
-            {/* Medical Record Number */}
+            {/* MRN */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Medical Record Number</label>
+              <label className="block text-sm text-slate-300 mb-1">Medical Record Number</label>
               <input
                 type="text"
                 name="medical_record_number"
                 value={formData.medical_record_number}
                 onChange={handleChange}
-                placeholder="MRN001"
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                required
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               />
             </div>
 
-            {/* Blood Group */}
+            {/* Blood */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Blood Group</label>
+              <label className="block text-sm text-slate-300 mb-1">Blood Group</label>
               <select
                 name="blood_group"
                 value={formData.blood_group}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               >
-                <option value="">Select Blood Group</option>
+                <option value="">Select</option>
                 <option value="O+">O+</option>
-                <option value="O-">O-</option>
                 <option value="A+">A+</option>
-                <option value="A-">A-</option>
                 <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
               </select>
             </div>
 
-            {/* Marital Status */}
+            {/* Marital */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1">Marital Status</label>
+              <label className="block text-sm text-slate-300 mb-1">Marital Status</label>
               <select
                 name="marital_status"
                 value={formData.marital_status}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white"
               >
-                <option value="">Select Status</option>
+                <option value="">Select</option>
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
-                <option value="Divorced">Divorced</option>
-                <option value="Widowed">Widowed</option>
               </select>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-6 py-2 px-4 bg-linear-to-r from-cyan-500 to-emerald-500 hover:from-cyan-600 hover:to-emerald-600 text-white font-semibold rounded-lg transition-all duration-200 disabled:opacity-50 cursor-pointer"
+              className="md:col-span-2 w-full mt-4 py-2 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-lg"
             >
-              {isSubmitting ? "Creating Account..." : "Create Account"}
+              {isSubmitting ? "Creating..." : "Create Account"}
             </button>
 
-            {/* Login Link */}
-            <p className="text-center text-slate-400 mt-4">
+            {/* Login */}
+            <p className="md:col-span-2 text-center text-slate-400 mt-2">
               Already have an account?{" "}
-              <a href="/login" className="text-cyan-400 hover:text-cyan-300 cursor-pointer">
+              <a href="/login" className="text-cyan-400">
                 Login here
               </a>
             </p>
+
           </form>
         </div>
       </div>
